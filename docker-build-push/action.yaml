@@ -5,6 +5,10 @@ inputs:
   password:
     required: true
     description: "GitHub token for registry authentication"
+outputs:
+  tag:
+    description: "Image tag"
+    value: ${{ steps.meta.outputs.tags[0] }}
 runs:
   using: "composite"
   steps:
