@@ -49,7 +49,6 @@ runs:
       id: create-secret
       uses: vdksystem/flux-gha-actions/image-pull-secret@main
       with:
-        registry: ${{ env.REGISTRY }}
         username: ${{ inputs.username }}
         password: ${{ inputs.token }}
     - name: Run chart-testing (install)
