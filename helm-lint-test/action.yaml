@@ -19,6 +19,17 @@ runs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
+    - name: Log into registry ${{ env.REGISTRY }}
+      #      if: github.event_name != 'pull_request'
+      uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ inputs.username }}
+        password: ${{ inputs.password }}
+    - name: Test docker pull
+      shell: bash
+      run: |
+        docker pull ghcr.io/vdksystem/flux-gha-app:${{ inputs.tag }}
 
     - name: Set up Helm
       uses: azure/setup-helm@v3
@@ -62,17 +73,6 @@ runs:
       with:
         username: ${{ inputs.username }}
         password: ${{ inputs.password }}
-    - name: Log into registry ${{ env.REGISTRY }}
-      #      if: github.event_name != 'pull_request'
-      uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ inputs.username }}
-        password: ${{ inputs.password }}
-    - name: Test docker pull
-      shell: bash
-      run: |
-        docker pull ghcr.io/vdksystem/flux-gha-app:${{ inputs.tag }}
     - name: Run chart-testing (install)
       if: steps.list-changed.outputs.changed == 'true'
       shell: bash
