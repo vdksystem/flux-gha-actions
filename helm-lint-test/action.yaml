@@ -51,6 +51,17 @@ runs:
       with:
         username: ${{ inputs.username }}
         password: ${{ inputs.password }}
+    - name: Log into registry ${{ env.REGISTRY }}
+      #      if: github.event_name != 'pull_request'
+      uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ inputs.password }}
+    - name: Test docker pull
+      shell: bash
+      run: |
+        docker pull ghcr.io/vdksystem/flux-gha-app:sha-65da841a73ed07393d7cb01b6e8d3caef2ed8d0f
     - name: Run chart-testing (install)
       if: steps.list-changed.outputs.changed == 'true'
       shell: bash
