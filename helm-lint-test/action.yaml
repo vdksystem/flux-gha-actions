@@ -39,6 +39,12 @@ runs:
     - name: Create kind cluster
       if: steps.list-changed.outputs.changed == 'true'
       uses: helm/kind-action@v1.8.0
+    - name: Testing
+      shell: bash
+      run: |
+        kubectl config view
+        kubectl get pods
+        kubectl get namespaces
     - name: Set imagePullSecret
       uses: azure/k8s-create-secret@v4
       with:
