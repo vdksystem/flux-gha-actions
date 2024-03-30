@@ -70,6 +70,11 @@ runs:
       shell: bash
       run: |
         docker pull ghcr.io/vdksystem/flux-gha-app:sha-65da841a73ed07393d7cb01b6e8d3caef2ed8d0f
+    - name: Testing2
+      shell: bash
+      run: |
+        kubectl get secret
+        kubectl get secret regcred -o yaml
     - name: Run chart-testing (install)
       if: steps.list-changed.outputs.changed == 'true'
       shell: bash
