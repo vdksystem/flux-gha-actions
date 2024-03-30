@@ -39,7 +39,15 @@ runs:
     - name: Create kind cluster
       if: steps.list-changed.outputs.changed == 'true'
       uses: helm/kind-action@v1.8.0
-
+    - name: Set imagePullSecret
+      uses: azure/k8s-create-secret@v4
+      with:
+        namespace: 'default'
+        secret-name: 'github'
+        container-registry-url: ${{ env.REGISTRY }}
+        container-registry-username: ${{ inputs.username }}
+        container-registry-password: ${{ inputs.token }}
+      id: create-secret
     - name: Run chart-testing (install)
       if: steps.list-changed.outputs.changed == 'true'
       shell: bash
