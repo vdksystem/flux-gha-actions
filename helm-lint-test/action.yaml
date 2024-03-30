@@ -8,6 +8,9 @@ inputs:
   username:
     required: true
     description: "GitHub user for registry authentication"
+  tag:
+    required: false
+    description: "Image teg to use"
 
 runs:
   using: "composite"
@@ -69,13 +72,8 @@ runs:
     - name: Test docker pull
       shell: bash
       run: |
-        docker pull ghcr.io/vdksystem/flux-gha-app:sha-65da841a73ed07393d7cb01b6e8d3caef2ed8d0f
-    - name: Testing2
-      shell: bash
-      run: |
-        kubectl get secret
-        kubectl get secret regcred -o yaml
+        docker pull ghcr.io/vdksystem/flux-gha-app:${{ inputs.tag }}
     - name: Run chart-testing (install)
       if: steps.list-changed.outputs.changed == 'true'
       shell: bash
-      run: ct install --target-branch ${{ github.event.repository.default_branch }} --namespace default
+      run: ct install --target-branch ${{ github.event.repository.default_branch }} --namespace default --helm-extra-set-args "--set=image.tag=${{ inputs.tag }}"
