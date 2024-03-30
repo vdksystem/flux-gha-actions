@@ -45,6 +45,9 @@ runs:
         kubectl config view
         kubectl get pods
         kubectl get namespaces
+    - uses: azure/k8s-set-context@v4
+      with:
+        method: kubeconfig
     - name: Set imagePullSecret
       uses: azure/k8s-create-secret@v4
       with:
