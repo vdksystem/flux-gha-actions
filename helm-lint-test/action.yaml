@@ -8,9 +8,6 @@ inputs:
   username:
     required: true
     description: "GitHub user for registry authentication"
-  tag:
-    required: false
-    description: "Image teg to use"
 
 runs:
   using: "composite"
@@ -19,17 +16,6 @@ runs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    - name: Log into registry ${{ env.REGISTRY }}
-      #      if: github.event_name != 'pull_request'
-      uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ inputs.username }}
-        password: ${{ inputs.password }}
-    - name: Test docker pull
-      shell: bash
-      run: |
-        docker pull ghcr.io/vdksystem/flux-gha-app:${{ inputs.tag }}
 
     - name: Set up Helm
       uses: azure/setup-helm@v3
@@ -61,19 +47,17 @@ runs:
     - name: Create kind cluster
       if: steps.list-changed.outputs.changed == 'true'
       uses: helm/kind-action@v1.8.0
-    - name: Testing
-      shell: bash
-      run: |
-        kubectl config view
-        kubectl get pods
-        kubectl get namespaces
+
     - name: Set imagePullSecret
       id: create-secret
       uses: vdksystem/flux-gha-actions/image-pull-secret@main
       with:
         username: ${{ inputs.username }}
         password: ${{ inputs.password }}
+
+    # We always test with latest tag, as on each image build we tag it with latest
+    # This will make sure that if we build image alongside with helm changes we will test with that image
     - name: Run chart-testing (install)
       if: steps.list-changed.outputs.changed == 'true'
       shell: bash
-      run: ct install --target-branch ${{ github.event.repository.default_branch }} --namespace default --helm-extra-set-args "--set=image.tag=${{ inputs.tag }}"
+      run: ct install --target-branch ${{ github.event.repository.default_branch }} --namespace default --helm-extra-set-args "--set=image.tag=latest"
