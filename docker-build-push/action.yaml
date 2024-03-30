@@ -8,7 +8,7 @@ inputs:
 outputs:
   tag:
     description: "Image tag"
-    value: ${{ steps.meta.outputs.tags[0] }}
+    value: ${{ steps.get-tag.outputs.tag }}
 runs:
   using: "composite"
   steps:
@@ -38,9 +38,11 @@ runs:
           type=sha,enable=true,priority=100,prefix={{branch}}-,suffix=-{{date 'X'}},format=short,enable={{is_default_branch}}
           type=sha,enable=true,priority=100,prefix=${{ github.event.pull_request.user.login }}-,suffix=-{{date 'X'}},format=short,enable=${{ github.event_name == 'pull_request'}}
           type=sha,format=long
-    - shell: bash
+    - id: get-tag
+      shell: bash
       run: |
-        echo "${{ steps.meta.outputs.tags }}" | awk -F ':' '{print $NF}' | head -1
+        tag=$(echo "${{ steps.meta.outputs.tags }}" | awk -F ':' '{print $NF}' | head -1)
+        echo "tag=$tag" >> "$GITHUB_OUTPUT"
     # Build and push Docker image with Buildx (don't push on PR)
     # https://github.com/docker/build-push-action
     - name: Build and push Docker image
