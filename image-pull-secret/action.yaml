@@ -12,6 +12,10 @@ inputs:
     required: false
     default: "ghcr.io"
     description: "GitHub token for registry authentication"
+  namespace:
+    required: false
+    default: "default"
+    description: "Kubernetes namespace to use"
 
 runs:
   using: "composite"
@@ -19,5 +23,5 @@ runs:
     - name: Create secret
       shell: bash
       run: |
-        kubectl create secret docker-registry regcred --docker-password=${{ inputs.password }} --docker-server=${{ inputs.registry }} --docker-username=${{ inputs.username }}
-        kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "regcred"}]}'
+        kubectl create secret docker-registry regcred -n ${{ inputs.namespace }} --docker-password=${{ inputs.password }} --docker-server=${{ inputs.registry }} --docker-username=${{ inputs.username }}
+        kubectl patch serviceaccount default -n ${{ inputs.namespace }} -p '{"imagePullSecrets": [{"name": "regcred"}]}'
