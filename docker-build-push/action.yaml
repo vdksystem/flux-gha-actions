@@ -1,6 +1,10 @@
 name: Build and push docker images to GitHub registry
 description: ""
 
+inputs:
+  password:
+    required: true
+    description: "GitHub token for registry authentication"
 runs:
   using: "composite"
   steps:
@@ -21,7 +25,7 @@ runs:
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        password: ${{ inputs.password }}
     - uses: docker/metadata-action@v5
       id: meta
       with:
