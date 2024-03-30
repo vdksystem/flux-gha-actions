@@ -45,18 +45,13 @@ runs:
         kubectl config view
         kubectl get pods
         kubectl get namespaces
-    - uses: azure/k8s-set-context@v4
-      with:
-        method: kubeconfig
     - name: Set imagePullSecret
-      uses: azure/k8s-create-secret@v4
-      with:
-        namespace: 'default'
-        secret-name: 'github'
-        container-registry-url: ${{ env.REGISTRY }}
-        container-registry-username: ${{ inputs.username }}
-        container-registry-password: ${{ inputs.token }}
       id: create-secret
+      uses: vdksystem/flux-gha-actions/image-pull-secret@main
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ inputs.username }}
+        password: ${{ inputs.token }}
     - name: Run chart-testing (install)
       if: steps.list-changed.outputs.changed == 'true'
       shell: bash

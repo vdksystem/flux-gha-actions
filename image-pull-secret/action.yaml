@@ -1,0 +1,23 @@
+name: Creates image pull secret and set it as default
+description: "Depends on kubectl"
+
+inputs:
+  password:
+    required: true
+    description: "GitHub token for registry authentication"
+  username:
+    required: true
+    description: "GitHub user for registry authentication"
+  registry:
+    required: false
+    default: "ghcr.io"
+    description: "GitHub token for registry authentication"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Create secret
+      shell: bash
+      run: |
+        kubectl create secret docker-registry regcred --docker-password=${{ inputs.password }} --docker-server=${{ inputs.registry }} --docker-username=${{ inputs.username }}
+        kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "regcred"}]}'
