@@ -1,6 +1,14 @@
 name: Lint and Test Charts
 description: "This action performs standard CI for helm charts"
 
+inputs:
+  password:
+    required: true
+    description: "GitHub token for registry authentication"
+  username:
+    required: true
+    description: "GitHub user for registry authentication"
+
 runs:
   using: "composite"
   steps:
@@ -56,7 +64,7 @@ runs:
       uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
       with:
         registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
+        username: ${{ inputs.username }}
         password: ${{ inputs.password }}
     - name: Test docker pull
       shell: bash
