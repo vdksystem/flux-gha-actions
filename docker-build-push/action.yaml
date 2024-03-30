@@ -43,6 +43,9 @@ runs:
       run: |
         tag=$(echo "${{ steps.meta.outputs.tags }}" | awk -F ':' '{print $NF}' | head -1)
         echo "tag=$tag" >> "$GITHUB_OUTPUT"
+    - shell: bash
+      run: |
+        echo ${{ steps.get-tag.outputs.tag }}
     # Build and push Docker image with Buildx (don't push on PR)
     # https://github.com/docker/build-push-action
     - name: Build and push Docker image
