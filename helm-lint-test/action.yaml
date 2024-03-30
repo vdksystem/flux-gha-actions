@@ -50,7 +50,7 @@ runs:
       uses: vdksystem/flux-gha-actions/image-pull-secret@main
       with:
         username: ${{ inputs.username }}
-        password: ${{ inputs.token }}
+        password: ${{ inputs.password }}
     - name: Run chart-testing (install)
       if: steps.list-changed.outputs.changed == 'true'
       shell: bash
