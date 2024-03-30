@@ -10,5 +10,7 @@ runs:
         fetch-depth: 0
 
     - name: Test
+      shell: bash
       run: |
         echo "running test logic"
+

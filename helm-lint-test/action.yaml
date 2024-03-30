@@ -24,6 +24,7 @@ runs:
 
     - name: Run chart-testing (list-changed)
       id: list-changed
+      shell: bash
       run: |
         changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
         if [[ -n "$changed" ]]; then
@@ -32,6 +33,7 @@ runs:
 
     - name: Run chart-testing (lint)
       if: steps.list-changed.outputs.changed == 'true'
+      shell: bash
       run: ct lint --target-branch ${{ github.event.repository.default_branch }}
 
     - name: Create kind cluster
@@ -40,4 +42,5 @@ runs:
 
     - name: Run chart-testing (install)
       if: steps.list-changed.outputs.changed == 'true'
+      shell: bash
       run: ct install --target-branch ${{ github.event.repository.default_branch }}
