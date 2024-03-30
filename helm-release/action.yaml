@@ -19,5 +19,4 @@ runs:
       uses: helm/chart-releaser-action@v1.6.0
       env:
         CR_TOKEN: "${{ inputs.token }}"
-        CR_GIT_REPO: "helm-charts"
         CR_SKIP_EXISTING: "true"
