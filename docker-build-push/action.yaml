@@ -40,9 +40,7 @@ runs:
           type=sha,format=long
     - shell: bash
       run: |
-        for tag in ${{ steps.meta.outputs.tags }};do
-            echo $tag
-        done
+        echo ${{ steps.meta.outputs.tags.0 }}
     # Build and push Docker image with Buildx (don't push on PR)
     # https://github.com/docker/build-push-action
     - name: Build and push Docker image
