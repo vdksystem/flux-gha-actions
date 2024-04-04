@@ -12,5 +12,6 @@ runs:
     - name: Test
       shell: bash
       run: |
-        echo "running test logic"
+        poetry install
+        poetry run pytest
 
